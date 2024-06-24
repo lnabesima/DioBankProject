@@ -16,6 +16,7 @@ Selecione uma opção para continuar:
 account_balance = 0.0
 MAX_WITHDRAW_LIMIT = 3
 current_withdraw_amount = 0
+bank_statement = []
 
 print(menu)
 while True:
@@ -24,6 +25,7 @@ while True:
         print("Opção selecionada: Depositar")
         amount = float(input("Digite o valor do deposito: "))
         account_balance += amount
+        bank_statement.append(f"Depósito: {locale.currency(amount)}")
         print(
             f"Depósito de {locale.currency(amount)} realizado com sucesso. Saldo atual: {locale.currency(account_balance)}")
         print(menu)
@@ -32,11 +34,14 @@ while True:
         print("Opção selecionada: Sacar")
         if current_withdraw_amount >= MAX_WITHDRAW_LIMIT:
             print("Você atingiu o limite máximo de saques diários. Tente novamente amanhã.")
-            break
+            print(menu)
+            continue
 
         amount = float(input("Digite o valor do saque: "))
         if account_balance > amount:
             account_balance -= amount
+            current_withdraw_amount += 1
+            bank_statement.append(f"Saque: {locale.currency(amount)}")
             print(
                 f"Saque de {locale.currency(amount)} realizado com sucesso. "
                 f"Saldo atual: {locale.currency(account_balance)}")
@@ -47,6 +52,10 @@ while True:
 
     elif option == '3':
         print("Opção selecionada: Extrato")
+        for transaction in bank_statement:
+            print(transaction)
+        print(f"Saldo atual: {locale.currency(account_balance)}")
+        print(menu)
     elif option == '0':
         print("Opção selecionada: Sair")
         break
