@@ -15,6 +15,7 @@ Selecione uma opção para continuar:
 
 account_balance = 0.0
 MAX_WITHDRAW_LIMIT = 3
+MAX_WITHDRAW_AMOUNT = 500.0
 current_withdraw_amount = 0
 bank_statement = []
 
@@ -24,6 +25,9 @@ while True:
     if option == '1':
         print("Opção selecionada: Depositar")
         amount = float(input("Digite o valor do deposito: "))
+        if amount <= 0:
+            print(f"Valor inválido. Por favor tente novamente.")
+            continue
         account_balance += amount
         bank_statement.append(f"Depósito: {locale.currency(amount)}")
         print(
@@ -38,6 +42,10 @@ while True:
             continue
 
         amount = float(input("Digite o valor do saque: "))
+        if amount > MAX_WITHDRAW_AMOUNT:
+            print(f"O valor é maior do que o limite máximo de saque por operação.")
+            continue
+
         if account_balance > amount:
             account_balance -= amount
             current_withdraw_amount += 1
