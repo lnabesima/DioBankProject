@@ -60,6 +60,10 @@ while True:
 
     elif option == '3':
         print("Opção selecionada: Extrato")
+        if not bank_statement:
+            print("Não foram registradas transações nesta conta.")
+            continue
+
         for transaction in bank_statement:
             print(transaction)
         print(f"Saldo atual: {locale.currency(account_balance)}")
