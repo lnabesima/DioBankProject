@@ -19,6 +19,19 @@ MAX_WITHDRAW_AMOUNT = 500.0
 current_withdraw_amount = 0
 bank_statement = []
 
+# TODO Separar as opções do menu em funções separadas
+# TODO A função `saque` deve receber parâmetros apenas por argumentos nomeados
+# TODO A função `depósito` deve receber parâmetros apenas por argumentos posicionais
+# TODO A função `extrato` deve receber parâmetros por argumentos posicionais E nomeados
+# TODO Criar duas novas funções: criar usuário (cliente do banco) e criar conta corrente (vincular com usuário)
+# TODO O usuário deve conter as seguintes informações: nome, data de nascimento, cpf e endereço.
+#  O endereço é uma string que contém os seguintes dados: logradouro, numero, bairro, cidade/estado
+#  O CPF deve ser único e armazenado somente os números. Os usuários devem ser armazenados em uma lista
+# TODO A Conta Corrente deve conter as seguintes informações: agência, numero e usuário
+#  O numero da conta é sequencial e deve começar em 1. O número da agência é fixo. Um usuário pode ter
+#  mais de uma conta, mas cada conta só pode ter um usuário
+
+
 print(menu)
 while True:
     option = input("Digite a opção desejada: ")
