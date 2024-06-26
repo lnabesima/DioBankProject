@@ -1,3 +1,5 @@
+from bank_operations import deposit
+
 import locale
 
 locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
@@ -21,7 +23,6 @@ bank_statement = []
 
 # TODO Separar as opções do menu em funções separadas
 # TODO A função `saque` deve receber parâmetros apenas por argumentos nomeados
-# TODO A função `depósito` deve receber parâmetros apenas por argumentos posicionais
 # TODO A função `extrato` deve receber parâmetros por argumentos posicionais E nomeados
 # TODO Criar duas novas funções: criar usuário (cliente do banco) e criar conta corrente (vincular com usuário)
 # TODO O usuário deve conter as seguintes informações: nome, data de nascimento, cpf e endereço.
@@ -38,13 +39,10 @@ while True:
     if option == '1':
         print("Opção selecionada: Depositar")
         amount = float(input("Digite o valor do deposito: "))
-        if amount <= 0:
-            print(f"Valor inválido. Por favor tente novamente.")
-            continue
-        account_balance += amount
-        bank_statement.append(f"Depósito: {locale.currency(amount)}")
-        print(
-            f"Depósito de {locale.currency(amount)} realizado com sucesso. Saldo atual: {locale.currency(account_balance)}")
+        try:
+            deposit(amount)
+        except (ValueError, TypeError) as err:
+            print(err)
         print(menu)
 
     elif option == '2':
