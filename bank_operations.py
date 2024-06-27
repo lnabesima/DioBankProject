@@ -7,6 +7,93 @@ MAX_WITHDRAW_LIMIT = 3
 MAX_WITHDRAW_AMOUNT = 500.0
 current_withdraw_amount = 0
 bank_statement = []
+clients = []
+
+
+# TODO A Conta Corrente deve conter as seguintes informações: agência, numero e usuário
+#  O numero da conta é sequencial e deve começar em 1. O número da agência é fixo. Um usuário pode ter
+#  mais de uma conta, mas cada conta só pode ter um usuário
+
+
+def list_all_clients() -> None:
+    """
+    This function prints all clients in `clients` list to the console.
+    :return: Nothing.
+    """
+
+    for client in clients:
+        print(client)
+
+
+def add_new_client() -> None:
+    """
+    This function calls the `create_client` function to create a new client and then append it to the
+    `clients` list.
+
+    :return: Nothing
+    """
+    try:
+        new_client = create_client()
+        clients.append(new_client)
+
+        print("Cliente adicionado com sucesso!")
+
+    except (TypeError, ValueError) as err:
+        print(err)
+
+
+def create_client() -> dict:
+    """
+    This function will create a new client for the banking system. It prompts the user for the client data and returns
+    a dictionary of it.
+
+    :return: A dictionary of client's data.
+    """
+    client_id = input("Insira o CPF do usuário: ").strip(" ./-")
+
+    if check_if_client_exists(client_id):
+        raise ValueError("Erro ao criar cliente: CPF já cadastrado.")
+
+    client_name = input("Insira o nome do usuário: ").strip()
+    client_birth = input("Insira a data de nascimento do usuário: ").strip()
+    client_address = create_client_address()
+
+    client = {'client_id': client_id, 'client_name': client_name, 'client_birth': client_birth,
+              'client_address': client_address}
+    return client
+
+
+def check_if_client_exists(client_id: str) -> bool:
+    """
+    This function checks if the client_id (the CPF number) exists anywhere in the `clients` list. If such
+    data is found, the function returns `True`. Else, it returns `False`.
+    This is needed because the client_id must be exclusive.
+
+    :param client_id: The client ID (their CPF number)
+    :return: `True` if the data is found, `False` otherwise
+    """
+    for client in clients:
+        if client_id in client.values():
+            return True
+    return False
+
+
+def create_client_address() -> str:
+    """
+    This function prompts the user for the client address details and returns a formatted string of the address.
+
+    :returns: A string of the client's address.
+    """
+    client_address_street = input("Insira o nome da rua: ").strip()
+    client_address_number = input("Insira o número do endereço: ").strip()
+    client_address_neighborhood = input("Insira o bairro: ").strip()
+    client_address_city = input("Insira a cidade: ").strip()
+    client_address_state = input("Insira a sigla da UF: ").strip()
+    client_address = (
+        f"{client_address_street}, {client_address_number}, {client_address_neighborhood}, {client_address_city}/"
+        f"{client_address_state}")
+
+    return client_address
 
 
 def withdraw(amount: float):
