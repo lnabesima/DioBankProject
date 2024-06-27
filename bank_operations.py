@@ -25,23 +25,49 @@ accounts = []
 
 
 def list_accounts_by_client(client_id: str) -> None:
-    pass
+    """
+    Prints all accounts that matches the ``client_id`` value in ``accounts`` list to the console. If it doesn't find
+    any, it prints a message informing that specific client doesn't have any accounts.
+
+    :param client_id: The client CPF, used as ID.
+    :return: Nothing
+    """
+
+    clean_client_id = strip_special_chars(client_id)
+    found_match = False
+
+    for account in accounts:
+        if account['account_holder'] == clean_client_id:
+            print(account)
+            found_match = True
+
+    if not found_match:
+        print("Não há contas cadastradas para esse cliente.")
 
 
 def list_all_accounts() -> None:
-    pass
+    """
+    This function prints all accounts in ``accounts`` list to the console.
+    :return: Nothing.
+    """
+    if not accounts:
+        print("Não há contas cadastradas.")
+        return
+
+    for account in accounts:
+        print(account)
 
 
-def add_new_account() -> None:
+def add_new_account(client_id: str) -> None:
     """
     This function calls the ``create_account`` function to create a new client and then append it to the
     ``accounts`` list.
 
     :return: Nothing
     """
-    client_id = strip_special_chars(input("Insira o CPF do cliente: ").strip(" ./-"))
+    clean_client_id = strip_special_chars(client_id)
     try:
-        new_account = create_account(client_id)
+        new_account = create_account(clean_client_id)
         accounts.append(new_account)
 
         print(f"Nova conta para cliente {client_id} criada com sucesso! Conta número {new_account.get('account_id')}")
@@ -73,6 +99,9 @@ def list_all_clients() -> None:
     This function prints all clients in `clients` list to the console.
     :return: Nothing.
     """
+    if not clients:
+        print("Não há clientes cadastrados.")
+        return
 
     for client in clients:
         print(client)
