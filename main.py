@@ -1,4 +1,4 @@
-from bank_operations import deposit, withdraw, generate_statement, add_new_client, list_all_clients
+from bank_operations import deposit, withdraw, generate_statement, add_new_client, list_all_clients, add_new_account
 
 menu = """
 Bem vindo ao DIO Bank.
@@ -51,6 +51,12 @@ while True:
     elif option == '5':
         print("Opção selecionada: Listar Clientes")
         list_all_clients()
+
+        print(menu)
+
+    elif option == '6':
+        print("Opção selecionada: Criar Conta Corrente")
+        add_new_account()
 
         print(menu)
 

@@ -33,14 +33,21 @@ def list_all_accounts() -> None:
 
 
 def add_new_account() -> None:
-    pass
+    client_id = input("Insira o CPF do cliente: ").strip(" ./-")
+    try:
+        new_account = create_account(client_id)
+        accounts.append(new_account)
+
+        print(f"Nova conta para cliente {client_id} criada com sucesso! Conta número {new_account.get('account_id')}")
+    except (ValueError, TypeError) as err:
+        print(err)
 
 
 def create_account(client_id: str) -> dict:
     if not check_if_client_exists(client_id):
         raise ValueError("Esse CPF não existe em nossa base de clientes.")
 
-    account_id = 1 if len(clients) == 0 else len(clients) + 1
+    account_id = 1 if len(accounts) == 0 else len(accounts) + 1
     account_branch = '0056'
     account_holder = client_id
     account_balance = 0.0
