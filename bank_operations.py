@@ -8,11 +8,45 @@ MAX_WITHDRAW_AMOUNT = 500.0
 current_withdraw_amount = 0
 bank_statement = []
 clients = []
-
+accounts = []
 
 # TODO A Conta Corrente deve conter as seguintes informações: agência, numero e usuário
 #  O numero da conta é sequencial e deve começar em 1. O número da agência é fixo. Um usuário pode ter
 #  mais de uma conta, mas cada conta só pode ter um usuário
+
+"""
+{
+    account_id: 1
+    account_branch: '0056'
+    account_holder: 123456789
+    account_balance
+}
+"""
+
+
+def list_accounts_by_client(client_id: str) -> None:
+    pass
+
+
+def list_all_accounts() -> None:
+    pass
+
+
+def add_new_account() -> None:
+    pass
+
+
+def create_account(client_id: str) -> dict:
+    if not check_if_client_exists(client_id):
+        raise ValueError("Esse CPF não existe em nossa base de clientes.")
+
+    account_id = 1 if len(clients) == 0 else len(clients) + 1
+    account_branch = '0056'
+    account_holder = client_id
+    account_balance = 0.0
+    account = {'account_id': account_id, 'account_branch': account_branch, 'account_holder': account_holder,
+               'account_balance': account_balance}
+    return account
 
 
 def list_all_clients() -> None:
