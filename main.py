@@ -1,4 +1,4 @@
-from bank_operations import deposit, withdraw, generate_statement
+from bank_operations import deposit, withdraw, generate_statement, add_new_client, list_all_clients
 
 menu = """
 Bem vindo ao DIO Bank.
@@ -8,15 +8,13 @@ Selecione uma opção para continuar:
 [1] - Depositar
 [2] - Sacar
 [3] - Extrato
+[4] - Criar Cliente
+[5] - Listar Clientes
+[6] - Criar Conta Corrente
 [0] - Sair
 """
 
 # TODO Criar duas novas funções: criar usuário (cliente do banco) e criar conta corrente (vincular com usuário)
-
-# TODO A Conta Corrente deve conter as seguintes informações: agência, numero e usuário
-#  O numero da conta é sequencial e deve começar em 1. O número da agência é fixo. Um usuário pode ter
-#  mais de uma conta, mas cada conta só pode ter um usuário
-
 
 print(menu)
 while True:
@@ -37,15 +35,28 @@ while True:
             withdraw(amount=amount)
         except ValueError as err:
             print(err)
-
         print(menu)
 
     elif option == '3':
         print("Opção selecionada: Extrato")
         generate_statement()
         print(menu)
+
+    elif option == '4':
+        print("Opção selecionada: Criar Cliente")
+        add_new_client()
+
+        print(menu)
+
+    elif option == '5':
+        print("Opção selecionada: Listar Clientes")
+        list_all_clients()
+
+        print(menu)
+
     elif option == '0':
         print("Opção selecionada: Sair")
         break
+
     else:
         print("Opção inválida. Tente novamente.")
