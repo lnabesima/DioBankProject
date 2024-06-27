@@ -1,4 +1,4 @@
-import locale
+import locale, re
 
 locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
 
@@ -33,7 +33,13 @@ def list_all_accounts() -> None:
 
 
 def add_new_account() -> None:
-    client_id = input("Insira o CPF do cliente: ").strip(" ./-")
+    """
+    This function calls the ``create_account`` function to create a new client and then append it to the
+    ``accounts`` list.
+
+    :return: Nothing
+    """
+    client_id = strip_special_chars(input("Insira o CPF do cliente: ").strip(" ./-"))
     try:
         new_account = create_account(client_id)
         accounts.append(new_account)
@@ -44,6 +50,12 @@ def add_new_account() -> None:
 
 
 def create_account(client_id: str) -> dict:
+    """
+    Creates a new account using the ``client_id`` parameter. Initially all accounts have 0 as balance, '0056' as branch
+    number and the account id is sequential. The ``client_id`` is used to assign the holder of the newly created account
+    :param client_id: The ID of the account holder
+    :return: A dictionary containing the data for the new account
+    """
     if not check_if_client_exists(client_id):
         raise ValueError("Esse CPF não existe em nossa base de clientes.")
 
@@ -90,7 +102,7 @@ def create_client() -> dict:
 
     :return: A dictionary of client's data.
     """
-    client_id = input("Insira o CPF do usuário: ").strip(" ./-")
+    client_id = strip_special_chars(input("Insira o CPF do usuário: ").strip(" ./-"))
 
     if check_if_client_exists(client_id):
         raise ValueError("Erro ao criar cliente: CPF já cadastrado.")
@@ -107,7 +119,7 @@ def create_client() -> dict:
 def check_if_client_exists(client_id: str) -> bool:
     """
     This function checks if the client_id (the CPF number) exists anywhere in the `clients` list. If such
-    data is found, the function returns `True`. Else, it returns `False`.
+    data is found, the function returns ``True``. Else, it returns ``False``.
     This is needed because the client_id must be exclusive.
 
     :param client_id: The client ID (their CPF number)
@@ -135,6 +147,18 @@ def create_client_address() -> str:
         f"{client_address_state}")
 
     return client_address
+
+
+def strip_special_chars(input_str: str) -> str:
+    """
+    This function leverages the ``re`` module to use a regex to strip all the dots, slashes and hyphens
+    from a string, specially the ``client_id`` (which uses the CPF number, often inputted with all those
+    symbols)
+
+    :param input_str: The string that's going to be cleaned
+    :return: The same string, but without dots, slashes and hyphens
+    """
+    return re.sub(r'[./-]', '', input_str)
 
 
 def withdraw(amount: float):
