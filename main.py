@@ -16,16 +16,15 @@ Selecione uma opção para continuar:
 [0] - Sair
 """
 
-# TODO Criar duas novas funções: criar usuário (cliente do banco) e criar conta corrente (vincular com usuário)
-
 print(menu)
 while True:
     option = input("Digite a opção desejada: ")
     if option == '1':
         print("Opção selecionada: Depositar")
         amount = float(input("Digite o valor do deposito: "))
+        account_number = int(input("Digite o número da conta: "))
         try:
-            deposit(amount)
+            deposit(amount, account_number)
         except ValueError as err:
             print(err)
         print(menu)
@@ -33,8 +32,9 @@ while True:
     elif option == '2':
         print("Opção selecionada: Sacar")
         amount = float(input("Digite o valor do saque: "))
+        account_number = int(input("Digite o número da conta: "))
         try:
-            withdraw(amount=amount)
+            withdraw(amount=amount, account_id=account_number)
         except ValueError as err:
             print(err)
 
@@ -42,8 +42,9 @@ while True:
 
     elif option == '3':
         print("Opção selecionada: Extrato")
+        account_number = int(input("Digite o número da conta: "))
         try:
-            generate_statement()
+            generate_statement(account_number)
         except (ValueError, TypeError) as err:
             print(err)
 

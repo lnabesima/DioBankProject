@@ -1,27 +1,12 @@
-import locale, re
+import locale
+import re
 
 locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
 
-account_balance = 0.0
 MAX_WITHDRAW_LIMIT = 3
 MAX_WITHDRAW_AMOUNT = 500.0
-current_withdraw_amount = 0
-bank_statement = []
 clients = []
 accounts = []
-
-# TODO A Conta Corrente deve conter as seguintes informações: agência, numero e usuário
-#  O numero da conta é sequencial e deve começar em 1. O número da agência é fixo. Um usuário pode ter
-#  mais de uma conta, mas cada conta só pode ter um usuário
-
-"""
-{
-    account_id: 1
-    account_branch: '0056'
-    account_holder: 123456789
-    account_balance
-}
-"""
 
 
 def list_accounts_by_client(client_id: str) -> None:
@@ -88,9 +73,13 @@ def create_account(client_id: str) -> dict:
     account_id = 1 if len(accounts) == 0 else len(accounts) + 1
     account_branch = '0056'
     account_holder = client_id
-    account_balance = 0.0
+    account_current_balance = 0.0
+    account_current_withdraw_amount = 0
+    account_statement = []
     account = {'account_id': account_id, 'account_branch': account_branch, 'account_holder': account_holder,
-               'account_balance': account_balance}
+               'account_balance': account_current_balance,
+               'account_current_withdraw_amount': account_current_withdraw_amount,
+               'account_statement': account_statement}
     return account
 
 
@@ -190,45 +179,60 @@ def strip_special_chars(input_str: str) -> str:
     return re.sub(r'[./-]', '', input_str)
 
 
-def withdraw(amount: float):
-    global current_withdraw_amount, account_balance
+def withdraw(amount: float, account_id: int) -> None:
+    for account in accounts:
+        if account['account_id'] == account_id:
+            if account['account_current_withdraw_amount'] >= MAX_WITHDRAW_LIMIT:
+                raise ValueError("Erro ao realizar saque: Limite máximo de saques atingido.")
 
-    if current_withdraw_amount >= MAX_WITHDRAW_LIMIT:
-        raise ValueError("Erro ao realizar saque: Limite máximo de saques atingido.")
+            if amount > MAX_WITHDRAW_AMOUNT:
+                raise ValueError(
+                    f"Erro ao realizar saque: O valor máximo de saque é {locale.currency(MAX_WITHDRAW_AMOUNT)}.")
 
-    if amount > MAX_WITHDRAW_AMOUNT:
-        raise ValueError(f"Erro ao realizar saque: O valor máximo de saque é {locale.currency(MAX_WITHDRAW_AMOUNT)}.")
+            if amount > account['account_balance']:
+                raise ValueError("Erro ao realizar saque: Saldo insuficiente.")
 
-    if amount > account_balance:
-        raise ValueError("Erro ao realizar saque: Saldo insuficiente.")
+            account['account_balance'] -= amount
+            account['account_current_withdraw_amount'] += 1
+            account['account_statement'].append(f"Saque: {locale.currency(amount)}")
+            print(
+                f"Saque de {locale.currency(amount)} realizado com sucesso. Saldo atual: "
+                f"{locale.currency(account['account_balance'])}"
+            )
+            return
 
-    account_balance -= amount
-    current_withdraw_amount += 1
-    bank_statement.append(f"Saque: {locale.currency(amount)}")
-    print(f"Saque de {locale.currency(amount)} realizado com sucesso. Saldo atual: {locale.currency(account_balance)}")
-    return
-
-
-def deposit(amount: float):
-    global account_balance, bank_statement
-
-    if amount < 0:
-        raise ValueError(
-            f"Erro ao realizar depósito: O valor a ser depositado precisa ser maior do que {locale.currency(0)}.")
-
-    account_balance += amount
-    bank_statement.append(f"Depósito: {locale.currency(amount)}")
-    print(
-        f"Depósito de {locale.currency(amount)} realizado com sucesso. Saldo atual: {locale.currency(account_balance)}")
-    return
+    raise ValueError("Não existe uma conta com esse número.")
 
 
-def generate_statement():
-    if not bank_statement:
-        print(f"Não foram registradas transações nesta conta.")
+def deposit(amount: float, account_id: int) -> None:
+    for account in accounts:
+        if account['account_id'] == account_id:
+            if amount < 0:
+                raise ValueError(
+                    f"Erro ao realizar depósito: O valor a ser depositado precisa ser maior do que "
+                    f"{locale.currency(0)}.")
 
-    for transaction in bank_statement:
-        print(transaction)
+            account['account_balance'] += amount
+            account['account_statement'].append(f"Depósito: {locale.currency(amount)}")
+            print(
+                f"Depósito de {locale.currency(amount)} realizado com sucesso. Saldo atual: "
+                f"{locale.currency(account['account_balance'])}"
+            )
+            return
 
-    print(f"=== Saldo atual: {locale.currency(account_balance)} ===")
-    return
+    raise ValueError("Não existe uma conta com esse número.")
+
+
+def generate_statement(account_id: int) -> None:
+    for account in accounts:
+        if account['account_id'] == account_id:
+
+            if not account['account_statement']:
+                print(f"Não foram registradas transações nesta conta.")
+
+            for transaction in account['account_statement']:
+                print(transaction)
+            print(f"=== Saldo atual: {locale.currency(account['account_balance'])} ===")
+            return
+
+    raise ValueError("Não existe uma conta com esse número.")
